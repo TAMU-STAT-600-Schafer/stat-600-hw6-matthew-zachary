@@ -58,7 +58,7 @@ arma::mat compute_W_k(const arma::mat& P_k) {
 //Implementing a helper function to update our Beta_k
 //[[Rcpp:export]]
 arma::colvec update_B_k(const arma::mat& X, const arma::mat& P_k, const arma::colvec& Y, int k, const arma::colvec& beta_k, double lambda, double eta) {
-  int n = X.n_rows;
+  //int n = X.n_rows;
   int p = X.n_cols;
   
   arma::mat W_k = compute_W_k(P_k);
@@ -73,10 +73,13 @@ arma::colvec update_B_k(const arma::mat& X, const arma::mat& P_k, const arma::co
 
 arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, double eta, const arma::mat& probabilities) {
   int K = beta.n_cols;
+  arma::mat updated_beta = beta;
   
   for (int i = 0; i < K; i++) {
     //fix why is this subview error happening? 
-    beta.col(i) = update_B_k(X, probabilities, Y, i, beta.col(i), lambda, eta);
+    arma::colvec beta_k = updated_beta.col(i);
+    beta_k = update_B_k(X, probabilities, Y, i + 1, beta_k, lambda, eta);
+    updated_beta.col(i) = beta_k; 
   }
   
   return beta;
