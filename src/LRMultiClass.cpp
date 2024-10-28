@@ -62,12 +62,12 @@ arma::colvec update_B_k(const arma::mat& X, const arma::mat& P_k, const arma::co
   int p = X.n_cols;
   
   arma::mat W_k = compute_W_k(P_k);
-  arma::mat X_W_k = X % W_k;
+  arma::mat X_W_k = X.each_col() % W_k;
   arma::mat X_T_W_k = arma::trans(X) * X_W_k;
   
-  arma::colvec second_term = arma::trans(X) * (P_k - arma::conv_to<arma::colvec>::from(Y == (k - 1)));
+  arma::colvec second_term = arma::trans(X) * (P_k - arma::conv_to<arma::colvec>::from(Y == (k)));
   
-  arma::colvec updated_beta_k = beta_k - eta * arma::solve(X_T_W_k + lambda * arma::eye(p, p), second_term + lambda * beta_k);
+  arma::colvec updated_beta_k = beta_k - eta * arma::inv(X_T_W_k + lambda * arma::eye(p, p)) * (second_term + (lambda * beta_k));
   return updated_beta_k;
 }
 
@@ -98,7 +98,6 @@ arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
 Rcpp::List LRMultiClass_c(const arma::mat& X, const arma::uvec& y, const arma::mat& beta_init,
                                int numIter = 50, double eta = 0.1, double lambda = 1){
     // All input is assumed to be correct
-    
     // Initialize some parameters
     int K = max(y) + 1; // number of classes
     //int p = X.n_cols;
