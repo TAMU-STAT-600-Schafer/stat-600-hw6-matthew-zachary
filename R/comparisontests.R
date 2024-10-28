@@ -38,3 +38,15 @@ beta_test <- matrix(c(0.1, 0.2, 0.3, 0.4), ncol = 2) # 2 x 2 matrix
 probabilities_r <- class_probabilities_r(X_test, beta_test)
 probabilities_cpp <- class_probabilities(X_test, beta_test)
 print(all.equal(probabilities_r, probabilities_cpp))
+
+#test for obj function 
+# Define test data
+X_test <- matrix(c(1, 2, 1, 3, 1, 4), ncol = 2, byrow = TRUE) # 3 x 2 matrix
+Y_test <- c(0, 1, 1)
+beta_test <- matrix(c(0.1, 0.2, 0.3, 0.4), ncol = 2) # 2 x 2 matrix
+lambda_test <- 0.5
+class_probs <- class_probabilities(X_test, beta_test) 
+objective_r <- objective_fx_r(X_test, Y_test, beta_test, lambda_test, class_probs)
+objective_cpp <- objective_fx(X_test, Y_test, beta_test, lambda_test, class_probs)
+cat("Test `objective_fx`\n")
+print(all.equal(objective_r, objective_cpp))
