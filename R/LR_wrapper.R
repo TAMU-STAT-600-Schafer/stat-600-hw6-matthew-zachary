@@ -1,14 +1,15 @@
 
 #' Title
 #'
-#' @param X 
-#' @param y 
-#' @param numIter 
-#' @param eta 
-#' @param lambda 
-#' @param beta_init 
+#' @param X n x p training data, 1st column should be 1s to account for intercept
+#' @param y a vector of size n of class labels, from 0 to K-1
+#' @param numIter  number of FIXED iterations of the algorithm, default value is 50
+#' @param eta learning rate, default value is 0.1
+#' @param lambda ridge parameter, default value is 1
+#' @param beta_init (optional) initial starting values of beta for the algorithm, should be p x K matrix 
 #'
-#' @return
+#' @return beta - p x K matrix of estimated beta values after numIter iterations
+#' objective - (numIter + 1) length vector of objective values of the function that we are minimizing at each iteration (+ starting value)
 #' @export
 #'
 #' @examples
@@ -42,7 +43,6 @@ LRMultiClass <- function(X, y, numIter = 50, eta = 0.1, lambda = 1, beta_init = 
       stop(paste("beta_init should be p x K but it is instead", dim(beta_init)[1], "x", dim(beta_init)[2]))
     }
   }
-  
   # Call C++ LRMultiClass_c function to implement the algorithm
   out = LRMultiClass_c(X, y, numIter, eta, lambda, beta_init)
   
