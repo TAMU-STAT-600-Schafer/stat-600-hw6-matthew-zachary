@@ -58,3 +58,11 @@ P_k_test <- matrix(c(0.2, 0.8, 0.3, 0.7, 0.4, 0.6), ncol = 2) # 3 x 2 matrix
 W_k_r <- compute_W_k_r(P_k_test)
 W_k_cpp <- compute_W_k(P_k_test)
 print(all.equal(W_k_r, W_k_cpp))
+
+# Define test data
+beta_k_test <- c(0.1, 0.2) # 2 x 1 vector
+lambda_test <- 0.5
+eta_test <- 0.01
+updated_beta_k_r <- update_B_k_r(X_test, P_k_test[, 1], Y_test, 1, beta_k_test, lambda_test, eta_test)
+updated_beta_k_cpp <- update_B_k(X_test, P_k_test[, 1], Y_test, 1, beta_k_test, lambda_test, eta_test) 
+print(all.equal(updated_beta_k_r, updated_beta_k_cpp))
