@@ -17,20 +17,12 @@ LRMultiClass <- function(X, y, numIter = 50, eta = 0.1, lambda = 1, beta_init = 
   
   # Compatibility checks from HW3 and initialization of beta_init
   # Check that the first column of X and Xt are 1s, if not - display appropriate message and stop execution.
-  if(!all(X[ , 1] == 1) || !all(Xt[ , 1] == 1)){
-    stop(print("First column of X and/or Xt are not all 1s"))
+  if(!all(X[ , 1] == 1)){
+    stop(print("First column of X are not all 1s"))
   }
   # Check for compatibility of dimensions between X and Y
   if (dim(X)[1] != length(y)){
     stop(print("the dimensions of X and Y are not compatible"))
-  }
-  # Check for compatibility of dimensions between Xt and Yt
-  if (dim(Xt)[1] != length(yt)){
-    stop(print("the dimensions of Xt and Yt are not compatible"))
-  }
-  # Check for compatibility of dimensions between X and Xt
-  if (dim(Xt)[2] != dim(X)[2]){
-    stop(print("the dimensions of Xt and X are not compatible"))  
   }
   # Check eta is positive
   if(eta <= 0){
