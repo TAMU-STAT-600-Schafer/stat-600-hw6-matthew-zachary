@@ -43,7 +43,7 @@ double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
     }
   }
   
-  double regularization_term = (lambda / 2) * arma::sum(arma::pow(beta, 2));
+  double regularization_term = (lambda / 2) * arma::accu(arma::square(beta));
   double function_value = -first_term + regularization_term;
   
   return function_value;
