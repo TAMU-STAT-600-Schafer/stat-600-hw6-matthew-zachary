@@ -75,7 +75,17 @@ probabilities <- class_probabilities(X_test, beta_test)
 updated_beta_r <- update_fx_r(X_test, Y_test, beta_test, lambda_test, eta_test, probabilities)
 updated_beta_cpp <- update_fx(X_test, Y_test, beta_test, lambda_test, eta_test, probabilities) 
 
-# Compare results
-cat("Test `update_fx`\n")
 print(all.equal(updated_beta_r, updated_beta_cpp))
-print(updated_beta_cpp)
+
+#test for our actual function 
+X <- matrix(c(1, 1, 1, 1, 1, 2, 3, 4, 5, 6, 
+              1, 2, 1, 3, 1, 4, 2, 5, 3, 6), ncol = 4)
+y <- c(0, 1, 2, 1, 0)
+beta_init <- matrix(0, ncol(X), length(unique(y)))
+
+numIter <- 10
+eta <- 0.1
+lambda <- 0.01
+
+result_cpp <- LRMultiClass_c(X, y, beta_init, numIter, eta, lambda)
+result_r <- LRMultiClassold(X, y, X, y, numIter, eta, lambda, beta_init)
