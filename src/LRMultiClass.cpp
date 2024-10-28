@@ -21,7 +21,7 @@ arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
   
   for(int i=0; i<n; i++){
     //check this, it's saying that sum isn't in namespace? but seems like its in the docs
-    probabilities.row(i) = exp_scores.row(i) / arma::accu(exp_scores.row(i));
+    probabilities.row(i) = exp_scores.row(i) / arma::sum(exp_scores.row(i));
     
   }
 
@@ -38,7 +38,7 @@ double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < k; j++) {
       if (Y(i) == j) {
-        first_term += arma::log(class_probabilities(i, j));
+        first_term += log(class_probabilities(i, j));
       }
     }
   }
@@ -76,7 +76,7 @@ arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
   
   for (int i = 0; i < K; i++) {
     //fix why is this subview error happening? 
-    beta.col(i) = update_B_k(X, probabilities, Y, i + 1, beta.col(i), lambda, eta);
+    beta.col(i) = update_B_k(X, probabilities, Y, i, beta.col(i), lambda, eta);
   }
   
   return beta;
@@ -104,9 +104,17 @@ Rcpp::List LRMultiClass_c(const arma::mat& X, const arma::uvec& y, const arma::m
     arma::vec objective(numIter + 1); // to store objective values
     
     // Initialize anything else that you may need
+    arma::mat probabilities = class_probabilities(X, beta);
+    objective[0] = objective_fx(X, y, beta, lambda, probabilities);
     
     // Newton's method cycle - implement the update EXACTLY numIter iterations
-    
+    for (int iter = 1; iter <= numIter; ++iter) {
+      for (int k = 0; k < K; ++k) {
+        beta.col(k) = update_B_k(X, probabilities.col(k), y, k, beta.col(k), lambda, eta);
+      }
+      probabilities = class_probabilities(X, beta);
+      objective[iter] = objective_fx(X, y, beta, lambda, probabilities);
+    }
     
     // Create named list with betas and objective values
     return Rcpp::List::create(Rcpp::Named("beta") = beta,
