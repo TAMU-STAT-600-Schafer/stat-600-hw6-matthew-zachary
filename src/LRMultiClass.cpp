@@ -108,7 +108,8 @@ Rcpp::List LRMultiClass_c(const arma::mat& X, const arma::uvec& y, const arma::m
     
     // Initialize anything else that you may need
     arma::mat probabilities = class_probabilities(X, beta);
-    objective[0] = objective_fx(X, y, beta, lambda, probabilities);
+    arma::colvec y_col = arma::conv_to<arma::colvec>::from(y); 
+    objective[0] = objective_fx(X, y_col, beta, lambda, probabilities);
     
     // Newton's method cycle - implement the update EXACTLY numIter iterations
     for (int iter = 1; iter <= numIter; ++iter) {
