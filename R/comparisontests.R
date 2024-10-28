@@ -59,6 +59,7 @@ W_k_r <- compute_W_k_r(P_k_test)
 W_k_cpp <- compute_W_k(P_k_test)
 print(all.equal(W_k_r, W_k_cpp))
 
+#test for b_k
 # Define test data
 beta_k_test <- c(0.1, 0.2) # 2 x 1 vector
 lambda_test <- 0.5
@@ -66,3 +67,15 @@ eta_test <- 0.01
 updated_beta_k_r <- update_B_k_r(X_test, P_k_test[, 1], Y_test, 1, beta_k_test, lambda_test, eta_test)
 updated_beta_k_cpp <- update_B_k(X_test, P_k_test[, 1], Y_test, 1, beta_k_test, lambda_test, eta_test) 
 print(all.equal(updated_beta_k_r, updated_beta_k_cpp))
+
+
+#test for updating our update_fx
+probabilities <- class_probabilities(X_test, beta_test)
+
+updated_beta_r <- update_fx_r(X_test, Y_test, beta_test, lambda_test, eta_test, probabilities)
+updated_beta_cpp <- update_fx(X_test, Y_test, beta_test, lambda_test, eta_test, probabilities) 
+
+# Compare results
+cat("Test `update_fx`\n")
+print(all.equal(updated_beta_r, updated_beta_cpp))
+print(updated_beta_cpp)
