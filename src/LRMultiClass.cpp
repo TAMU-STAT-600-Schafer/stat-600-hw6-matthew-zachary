@@ -8,6 +8,24 @@
 //
 // [[Rcpp::depends(RcppArmadillo)]]
 
+//Implementing a Helper function that computes class probabilities using SoftMax
+arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
+  int n = X.n_rows;
+  int k = beta.n_cols;
+  
+  arma::mat exp_scores = X * beta;
+  arma::mat probabilities(n, k);
+  
+  for(int i=0; i<n; i++){
+    //check this, it's saying that sum isn't in namespace? but seems like its in the docs
+    probabilities.row(i) = exp_scores.row(i)/arma::sum(exp_scores.row(i));
+    
+  }
+  
+  return probabilities;
+  
+}
+
 // For simplicity, no test data, only training data, and no error calculation.
 // X - n x p data matrix
 // y - n length vector of classes, from 0 to K-1
