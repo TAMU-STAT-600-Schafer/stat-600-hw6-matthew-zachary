@@ -31,3 +31,10 @@ X_test <- as.matrix(X_test)
 y_test <- as.integer(y_test)
 beta_init_test <- as.matrix(beta_init_test)
 result <- LRMultiClass_c(X_test, y_test, beta_init_test, numIter = 5, eta = 0.1, lambda = 1)
+
+#test for class_probs
+X_test <- matrix(c(1, 2, 1, 3, 1, 4), ncol = 2, byrow = TRUE) # 3 x 2 matrix
+beta_test <- matrix(c(0.1, 0.2, 0.3, 0.4), ncol = 2) # 2 x 2 matrix
+probabilities_r <- class_probabilities_r(X_test, beta_test)
+probabilities_cpp <- class_probabilities(X_test, beta_test)
+print(all.equal(probabilities_r, probabilities_cpp))

@@ -88,14 +88,14 @@ LRMultiClassold <- function(X, y, Xt, yt, numIter = 50, eta = 0.1, lambda = 1, b
 }
 
 #Function that takes in a nxp matrix X with the data points and a pxk matrix Beta
-class_probabilities <- function(X, beta){
+class_probabilities_r <- function(X, beta){
   exp_scores <- exp(X %*% beta)
   probabilities <- exp_scores/rowSums(exp_scores)
   return (probabilities)
 }
 #function that takes in X, Y, Beta, and lambda as constructed above and addtionally
 #the class probabilities and returns the objective function 
-objective_fx <- function(X, Y, beta, lambda, class_probabilities){
+objective_fx_r <- function(X, Y, beta, lambda, class_probabilities){
   n <- nrow(X)
   k <- nrow(beta)
   first_term <- 0
@@ -113,17 +113,17 @@ objective_fx <- function(X, Y, beta, lambda, class_probabilities){
 }
 
 #classifies each point given a the probabilities
-classify <- function(probs){
+classify_r <- function(probs){
   #potentially use max.col if that works cuz its faster 
   return(apply(probs, 1, which.max) - 1) 
 }
 
 #takes in probabilites for a class K and computes the diag 
-compute_W_k <- function(P_k){
+compute_W_k_r <- function(P_k){
   W_k <- P_k * (1-P_k)    
   return(W_k)
 }
-update_B_k <- function(X, P_k, Y, k, beta_k, lambda, eta){
+update_B_k_r <- function(X, P_k, Y, k, beta_k, lambda, eta){
   n <- nrow(X)
   p <- ncol(X)
   W_k <- compute_W_k(P_k)
@@ -138,7 +138,7 @@ update_B_k <- function(X, P_k, Y, k, beta_k, lambda, eta){
   updated_beta_k <- beta_k - (eta * solve(X_T_W_k + (lambda * diag(p))) %*% (second_term + (lambda * beta_k)))
   return (updated_beta_k)  
 }
-update_fx <- function(X, Y, beta, lambda, eta, probabilities){
+update_fx_r <- function(X, Y, beta, lambda, eta, probabilities){
   K <- ncol(beta)
   for (i in 1:K){
     beta[ , i] <- update_B_k(X, probabilities[ , i], Y, i, beta[, i], lambda, eta)
