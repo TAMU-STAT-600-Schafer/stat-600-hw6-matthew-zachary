@@ -50,3 +50,11 @@ objective_r <- objective_fx_r(X_test, Y_test, beta_test, lambda_test, class_prob
 objective_cpp <- objective_fx(X_test, Y_test, beta_test, lambda_test, class_probs)
 cat("Test `objective_fx`\n")
 print(all.equal(objective_r, objective_cpp))
+
+
+#test for w_k 
+# Define test data
+P_k_test <- matrix(c(0.2, 0.8, 0.3, 0.7, 0.4, 0.6), ncol = 2) # 3 x 2 matrix
+W_k_r <- compute_W_k_r(P_k_test)
+W_k_cpp <- compute_W_k(P_k_test)
+print(all.equal(W_k_r, W_k_cpp))
