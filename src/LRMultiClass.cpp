@@ -101,8 +101,8 @@ Rcpp::List LRMultiClass_c(const arma::mat& X, const arma::uvec& y, const arma::m
     
     // Initialize some parameters
     int K = max(y) + 1; // number of classes
-    int p = X.n_cols;
-    int n = X.n_rows;
+    //int p = X.n_cols;
+    //int n = X.n_rows;
     arma::mat beta = beta_init; // to store betas and be able to change them if needed
     arma::vec objective(numIter + 1); // to store objective values
     
@@ -114,10 +114,10 @@ Rcpp::List LRMultiClass_c(const arma::mat& X, const arma::uvec& y, const arma::m
     // Newton's method cycle - implement the update EXACTLY numIter iterations
     for (int iter = 1; iter <= numIter; ++iter) {
       for (int k = 0; k < K; ++k) {
-        beta.col(k) = update_B_k(X, probabilities.col(k), y, k, beta.col(k), lambda, eta);
+        beta.col(k) = update_B_k(X, probabilities.col(k), y_col, k, beta.col(k), lambda, eta);
       }
       probabilities = class_probabilities(X, beta);
-      objective[iter] = objective_fx(X, y, beta, lambda, probabilities);
+      objective[iter] = objective_fx(X, y_col, beta, lambda, probabilities);
     }
     
     // Create named list with betas and objective values
