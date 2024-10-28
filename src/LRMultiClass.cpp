@@ -11,6 +11,7 @@
 //Implementing a Helper function that computes class probabilities 
 //X - nxp data matrix
 //beta - pxk beta values 
+// [[Rcpp::export]]
 arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
   int n = X.n_rows;
   int k = beta.n_cols;
@@ -28,6 +29,7 @@ arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
   
 }
 //Implementing a Helper function that computes the objective value 
+// [[Rcpp::export]]
 double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, const arma::mat& class_probabilities) {
   int n = X.n_rows;
   int k = beta.n_rows;
@@ -46,6 +48,41 @@ double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
   
   return function_value;
 }
+
+//Implementing a helper function for W_k
+// [[Rcpp::export]]
+arma::mat compute_W_k(const arma::mat& P_k) {
+  return P_k % (1.0 - P_k);
+}
+
+//Implementing a helper function to update our Beta_k
+//[[Rcpp:export]]
+arma::colvec update_B_k(const arma::mat& X, const arma::mat& P_k, const arma::colvec& Y, int k, const arma::colvec& beta_k, double lambda, double eta) {
+  int n = X.n_rows;
+  int p = X.n_cols;
+  
+  arma::mat W_k = compute_W_k(P_k);
+  arma::mat X_W_k = X % W_k;
+  arma::mat X_T_W_k = arma::trans(X) * X_W_k;
+  
+  arma::colvec second_term = arma::trans(X) * (P_k - arma::conv_to<arma::colvec>::from(Y == (k - 1)));
+  
+  arma::colvec updated_beta_k = beta_k - eta * arma::solve(X_T_W_k + lambda * arma::eye(p, p), second_term + lambda * beta_k);
+  return updated_beta_k;
+}
+
+arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, double eta, const arma::mat& probabilities) {
+  int K = beta.n_cols;
+  
+  for (int i = 0; i < K; i++) {
+    //fix why is this subview error happening? 
+    beta.col(i) = update_B_k(X, probabilities, Y, i + 1, beta.col(i), lambda, eta);
+  }
+  
+  return beta;
+}
+
+
 
 // For simplicity, no test data, only training data, and no error calculation.
 // X - n x p data matrix
