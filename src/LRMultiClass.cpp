@@ -8,7 +8,9 @@
 //
 // [[Rcpp::depends(RcppArmadillo)]]
 
-//Implementing a Helper function that computes class probabilities using SoftMax
+//Implementing a Helper function that computes class probabilities 
+//X - nxp data matrix
+//beta - pxk beta values 
 arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
   int n = X.n_rows;
   int k = beta.n_cols;
@@ -21,9 +23,28 @@ arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
     probabilities.row(i) = exp_scores.row(i)/arma::sum(exp_scores.row(i));
     
   }
-  
+
   return probabilities;
   
+}
+//Implementing a Helper function that computes the objective value 
+double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, const arma::mat& class_probabilities) {
+  int n = X.n_rows;
+  int k = beta.n_rows;
+  double first_term = 0.0;
+  
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < k; j++) {
+      if (Y(i) == j) {
+        first_term += arma::log(class_probabilities(i, j));
+      }
+    }
+  }
+  
+  double regularization_term = (lambda / 2) * arma::sum(arma::pow(beta, 2));
+  double function_value = -first_term + regularization_term;
+  
+  return function_value;
 }
 
 // For simplicity, no test data, only training data, and no error calculation.
