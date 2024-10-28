@@ -21,7 +21,7 @@ arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
   
   for(int i=0; i<n; i++){
     //check this, it's saying that sum isn't in namespace? but seems like its in the docs
-    probabilities.row(i) = exp_scores.row(i)/arma::sum(exp_scores.row(i));
+    probabilities.row(i) = exp_scores.row(i) / arma::accu(exp_scores.row(i));
     
   }
 
