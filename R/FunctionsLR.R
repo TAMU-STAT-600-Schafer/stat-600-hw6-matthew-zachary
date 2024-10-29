@@ -60,22 +60,22 @@ LRMultiClassold <- function(X, y, Xt, yt, numIter = 50, eta = 0.1, lambda = 1, b
   objective <- numeric(numIter + 1)
   ## Calculate corresponding pk, objective value f(beta_init), training error and testing error given the starting point beta_init
   ##########################################################################
-  initial_probabilities <- class_probabilities(X, beta_init)
-  objective[1] <- objective_fx(X, y, beta_init, lambda, initial_probabilities)
-  test_probs <- class_probabilities(Xt, beta_init)
-  error_train[1] <- mean(classify(initial_probabilities) != y) * 100
-  error_test[1] <- mean(classify(test_probs) != yt) * 100
+  initial_probabilities <- class_probabilities_r(X, beta_init)
+  objective[1] <- objective_fx_r(X, y, beta_init, lambda, initial_probabilities)
+  test_probs <- class_probabilities_r(Xt, beta_init)
+  error_train[1] <- mean(classify_r(initial_probabilities) != y) * 100
+  error_test[1] <- mean(classify_r(test_probs) != yt) * 100
   ## Newton's method cycle - implement the update EXACTLY numIter iterations
   ##########################################################################
   for (i in 2:(numIter+1)){
-  # Within one iteration: perform the update, calculate updated objective function and training/testing errors in %
+    # Within one iteration: perform the update, calculate updated objective function and training/testing errors in %
     #just need update_fx to do what we want 
-    beta_init <- update_fx(X, y, beta_init, lambda, eta, initial_probabilities)
-    initial_probabilities <- class_probabilities(X, beta_init)
-    objective[i] <- objective_fx(X, y, beta_init, lambda, initial_probabilities)
-    test_probs <- class_probabilities(Xt, beta_init)
-    error_train[i] <- mean(classify(initial_probabilities) != y) * 100
-    error_test[i] <- mean(classify(test_probs) != yt) * 100
+    beta_init <- update_fx_r(X, y, beta_init, lambda, eta, initial_probabilities)
+    initial_probabilities <- class_probabilities_r(X, beta_init)
+    objective[i] <- objective_fx_r(X, y, beta_init, lambda, initial_probabilities)
+    test_probs <- class_probabilities_r(Xt, beta_init)
+    error_train[i] <- mean(classify_r(initial_probabilities) != y) * 100
+    error_test[i] <- mean(classify_r(test_probs) != yt) * 100
   }
   beta <- beta_init
   ## Return output
@@ -126,7 +126,7 @@ compute_W_k_r <- function(P_k){
 update_B_k_r <- function(X, P_k, Y, k, beta_k, lambda, eta){
   n <- nrow(X)
   p <- ncol(X)
-  W_k <- compute_W_k(P_k)
+  W_k <- compute_W_k_r(P_k)
   
   X_W_k <- X * W_k
   #can I speed up this line by using crossprod? 
@@ -141,7 +141,7 @@ update_B_k_r <- function(X, P_k, Y, k, beta_k, lambda, eta){
 update_fx_r <- function(X, Y, beta, lambda, eta, probabilities){
   K <- ncol(beta)
   for (i in 1:K){
-    beta[ , i] <- update_B_k(X, probabilities[ , i], Y, i, beta[, i], lambda, eta)
+    beta[ , i] <- update_B_k_r(X, probabilities[ , i], Y, i, beta[, i], lambda, eta)
   }
   return(beta)
 }

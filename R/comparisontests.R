@@ -48,7 +48,6 @@ lambda_test <- 0.5
 class_probs <- class_probabilities(X_test, beta_test) 
 objective_r <- objective_fx_r(X_test, Y_test, beta_test, lambda_test, class_probs)
 objective_cpp <- objective_fx(X_test, Y_test, beta_test, lambda_test, class_probs)
-cat("Test `objective_fx`\n")
 print(all.equal(objective_r, objective_cpp))
 
 
@@ -65,9 +64,19 @@ beta_k_test <- c(0.1, 0.2) # 2 x 1 vector
 lambda_test <- 0.5
 eta_test <- 0.01
 updated_beta_k_r <- update_B_k_r(X_test, P_k_test[, 1], Y_test, 1, beta_k_test, lambda_test, eta_test)
-updated_beta_k_cpp <- update_B_k(X_test, P_k_test[, 1], Y_test, 1, beta_k_test, lambda_test, eta_test) 
+updated_beta_k_cpp <- update_B_k(X_test, P_k_test, Y_test, 1, beta_k_test, lambda_test, eta_test) 
 print(all.equal(updated_beta_k_r, updated_beta_k_cpp))
 
+#testing for bigger b_k 
+X_train_2 <- matrix(rnorm(50), nrow = 10, ncol = 5) # 10 observations, 5 features
+Y_train_2 <- sample(0:2, 10, replace = TRUE)        # 10 class labels (3 classes)
+
+# Initialize parameters
+beta_2 <- matrix(rnorm(15), ncol = 3)    # p x K matrix (5 x 3)           
+probabilities_2 <- class_probabilities(X_train_2, beta_2)
+updated_beta_k_r <- update_B_k_r(X_train_2, probabilities_2[ , 1], Y_train_2, 1, beta_2[,1], lambda_test, eta_test)
+updated_beta_k_cpp <- update_B_k(X_train_2, as.vector(probabilities_2[, 1]), Y_train_2, 0, beta_2[,1], lambda_test, eta_test) 
+print(all.equal(updated_beta_k_r, updated_beta_k_cpp))
 
 #test for updating our update_fx
 probabilities <- class_probabilities(X_test, beta_test)

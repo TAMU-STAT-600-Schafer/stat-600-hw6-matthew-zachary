@@ -16,12 +16,12 @@ arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
   int n = X.n_rows;
   int k = beta.n_cols;
   
-  arma::mat exp_scores = X * beta;
+  arma::mat exp_scores = arma::exp(X * beta);
   arma::mat probabilities(n, k);
   
   for(int i=0; i<n; i++){
     //check this, it's saying that sum isn't in namespace? but seems like its in the docs
-    probabilities.row(i) = exp_scores.row(i) / arma::sum(exp_scores.row(i));
+    probabilities.row(i) = exp_scores.row(i) / arma::accu(exp_scores.row(i));
     
   }
 
@@ -52,7 +52,8 @@ double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
 //Implementing a helper function for W_k
 // [[Rcpp::export]]
 arma::mat compute_W_k(const arma::mat& P_k) {
-  return P_k % (1.0 - P_k);
+  arma::mat W_k = P_k % (1.0 - P_k);
+  return W_k;
 }
 
 //Implementing a helper function to update our Beta_k
@@ -60,12 +61,11 @@ arma::mat compute_W_k(const arma::mat& P_k) {
 arma::colvec update_B_k(const arma::mat& X, const arma::mat& P_k, const arma::colvec& Y, int k, const arma::colvec& beta_k, double lambda, double eta) {
   //int n = X.n_rows;
   int p = X.n_cols;
-  
   arma::mat W_k = compute_W_k(P_k);
   arma::mat X_W_k = X.each_col() % W_k;
   arma::mat X_T_W_k = arma::trans(X) * X_W_k;
   
-  arma::colvec second_term = arma::trans(X) * (P_k - arma::conv_to<arma::colvec>::from(Y == (k)));
+  arma::colvec second_term = arma::trans(X) * (P_k - (arma::conv_to<arma::colvec>::from(Y == (k))));
   
   arma::colvec updated_beta_k = beta_k - eta * arma::inv(X_T_W_k + lambda * arma::eye(p, p)) * (second_term + (lambda * beta_k));
   return updated_beta_k;
@@ -78,7 +78,7 @@ arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
   for (int i = 0; i < K; i++) {
     //fix why is this subview error happening? 
     arma::colvec beta_k = updated_beta.col(i);
-    beta_k = update_B_k(X, probabilities, Y, i + 1, beta_k, lambda, eta);
+    beta_k = update_B_k(X, probabilities.col(i), Y, i + 1, beta_k, lambda, eta);
     updated_beta.col(i) = beta_k; 
   }
   

@@ -1,5 +1,6 @@
 library(Rcpp)
 library(RcppArmadillo)
+Rcpp::sourceCpp("src/LRMultiClass.cpp")
 #' Title
 #'
 #' @param X n x p training data, 1st column should be 1s to account for intercept
