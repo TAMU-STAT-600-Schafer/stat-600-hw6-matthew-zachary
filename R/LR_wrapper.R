@@ -45,12 +45,7 @@ LRMultiClass <- function(X, y, numIter = 50, eta = 0.1, lambda = 1, beta_init = 
       stop(paste("beta_init should be p x K but it is instead", dim(beta_init)[1], "x", dim(beta_init)[2]))
     }
   }
-  X <- as.matrix(X)
-  y <- as.integer(y)
-  beta_init <- as.matrix(beta_init)
-  cat("Dimensions of X:", dim(X), "\n")
-  cat("Length of y:", length(y), "\n")
-  cat("Dimensions of beta_init:", dim(beta_init), "\n")
+  
   
   # Call C++ LRMultiClass_c function to implement the algorithm
   out = LRMultiClass_c(X, y, numIter, eta, lambda, beta_init)
