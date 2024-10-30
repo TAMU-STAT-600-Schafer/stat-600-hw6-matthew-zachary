@@ -82,7 +82,7 @@ arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
     updated_beta.col(i) = beta_k; 
   }
   
-  return beta;
+  return updated_beta;
 }
 
 

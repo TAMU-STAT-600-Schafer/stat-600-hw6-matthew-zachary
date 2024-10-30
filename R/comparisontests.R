@@ -21,7 +21,6 @@ X_test <- cbind(1, X_test)
 old = LRMultiClassold(X_train, y_train, X_test, y_test)
 new = LRMultiClass(X_train, y_train)
 
-
 #new test for Multiclass C
 X_test <- matrix(c(rep(1, 10), rnorm(30)), nrow = 10, ncol = 4)
 y_test <- as.integer(sample(0:1, 10, replace = TRUE))
