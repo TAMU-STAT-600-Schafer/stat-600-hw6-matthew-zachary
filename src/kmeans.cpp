@@ -9,46 +9,25 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::export]]
-arma::uvec MyKmeans_c(const arma::mat& X, int K,
-                            const arma::mat& M, int numIter = 100){
-    // All input is assumed to be correct
-    
-    // Initialize some parameters
-    int n = X.n_rows;
-    int p = X.n_cols;
-    arma::uvec Y(n); // to store cluster assignments
-    
-    // Initialize any additional parameters if needed
-    
-    // For loop with kmeans algorithm
-    for(int i = 0; i < numIter, ++i){
-  // This calculates which cluster is closest to the data point
-      Y <- apply(euc_function(X, X_squared, mu_1), MARGIN = 1, FUN = which.min);
-      
-  // This updates the cluster means
-      for(i in 1:K){
-        mu_temp[i, ] <- colMeans(X[Y == i, , drop = FALSE])
-      }
-      
-  // This breaks the loop if the cluster means did not change from the previous iteration
-      if(identical(mu_1,mu_temp)){
-        break
-      }
-      
-  // This checks to see if any of the clusters has disappeared and throws an error if one has
-      if(length(unique(Y)) < K){
-        stop(paste("One of the clusters has disappeared"))
-      }
-      
-  // This resets the cluster means
-      mu_1 <- mu_temp
+bool identical(const arma::vec& a, const arma::vec& b){
+  // This checks to see if the vectors are the same length
+  if(a.size() != b.size()){
+    return false;
+  }
+  
+  // This checks to see if the vectors are the same values 
+  for(int i = 0; i < a.size(); i++){
+    if(a[i] != b[i]){
+      return false;
     }
-    
-  // This removes the naming conventions of Y
-    Y <- unname(Y)
-    
-    
-    // Returns the vector of cluster assignments
-    return(Y);
+  }
+  
+  // If they are the exact same, it will return true
+  return true;
 }
 
+// [[Rcpp::export]]
+arma::mat testing(const arma::mat& X){
+  arma::mat X_squared = sum(arma::pow(X,2), 1);
+  return X_squared;
+}
