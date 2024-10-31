@@ -78,7 +78,7 @@ arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
   for (int i = 0; i < K; i++) {
     //fix why is this subview error happening? 
     arma::colvec beta_k = updated_beta.col(i);
-    beta_k = update_B_k(X, probabilities.col(i), Y, i + 1, beta_k, lambda, eta);
+    beta_k = update_B_k(X, probabilities.col(i), Y, i, beta_k, lambda, eta);
     updated_beta.col(i) = beta_k; 
   }
   
