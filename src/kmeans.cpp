@@ -28,13 +28,6 @@ arma::mat square_mat(const arma::mat& X, int& K){
   return returner;
 }
 
-//[[Rcpp::export]]
-arma::mat testing(arma::mat& X, arma::mat& mu){
-  arma::mat temp = X * mu.t();
-  return temp;
-}
-
-
 // [[Rcpp::export]]
 arma::mat euc_function_c(const arma::mat& X, const arma::mat& X_squared, const arma::mat& mu){
   arma::mat cluster;
@@ -75,6 +68,7 @@ arma::uvec MyKmeans_c(const arma::mat& X, int K,
   arma::mat mu_temp(K, n);
   arma::mat mu_1(K, n);
   arma::mat distances(n, K);
+  arma::uvec unique_vals;
   
   mu_temp = M;
   mu_1 = M;
@@ -95,11 +89,17 @@ arma::uvec MyKmeans_c(const arma::mat& X, int K,
     }
     
     if (arma::approx_equal(mu_1, mu_temp, "absdiff", 1e-10)) {
-      std::cout << "Matrices are identical. Breaking out of the loop." << std::endl;
       break; 
     }
     
     mu_1 = mu_temp;
+    
+    unique_vals = arma::unique(Y);
+    
+    if(unique_vals.size() != K){
+      arma::cout << "One of the clusters disappeared" << arma::endl;
+      return 0;
+    }
     
   }
   
