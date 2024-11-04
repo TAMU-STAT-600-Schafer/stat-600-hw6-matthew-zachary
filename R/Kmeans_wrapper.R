@@ -1,3 +1,6 @@
+library(Rcpp)
+library(RcppArmadillo)
+Rcpp::sourceCpp("src/kmeans.cpp")
 #' Title
 #'
 #' @param X 

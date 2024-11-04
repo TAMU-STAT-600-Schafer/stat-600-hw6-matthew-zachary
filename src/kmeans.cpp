@@ -48,11 +48,6 @@ arma::mat euc_function_c(const arma::mat& X, const arma::mat& X_squared, const a
   return returner;
 }
 
-// for(i in 1:K){
-//  mu_temp[i, ] <- colMeans(X[Y == i, , drop = FALSE])
-// }
-
-
 // [[Rcpp::export]]
 arma::uvec MyKmeans_c(const arma::mat& X, int K,
                       const arma::mat& M, int numIter = 100){
@@ -83,6 +78,12 @@ arma::uvec MyKmeans_c(const arma::mat& X, int K,
       Y(i) = distances.row(i).index_min(); 
     }
     
+    unique_vals = arma::unique(Y);
+    
+    if(unique_vals.size() < K){
+      Rcpp::stop("One of the clusters disappeared");
+    }
+    
     for(int i = 0; i < K; ++i){
       indices = find(Y == (i));
       mu_temp.row(i) = mean(X.rows(indices), 0);
@@ -93,14 +94,6 @@ arma::uvec MyKmeans_c(const arma::mat& X, int K,
     }
     
     mu_1 = mu_temp;
-    
-    unique_vals = arma::unique(Y);
-    
-    if(unique_vals.size() != K){
-      arma::cout << "One of the clusters disappeared" << arma::endl;
-      return 0;
-    }
-    
   }
   
   // Returns the vector of cluster assignments
