@@ -3,12 +3,12 @@ library(RcppArmadillo)
 Rcpp::sourceCpp("src/kmeans.cpp")
 #' Title
 #'
-#' @param X 
-#' @param K 
-#' @param M 
-#' @param numIter 
+#' @param X n by p matrix containing n data points to cluster
+#' @param K integer specifying number of clusters
+#' @param M optional, K by p matrix of cluster centers
+#' @param numIter number of maximal iterations for the algorithm, the default value is 100
 #'
-#' @return Explain return
+#' @return Return the vector of assignments Y
 #' @export
 #'
 #' @examples
