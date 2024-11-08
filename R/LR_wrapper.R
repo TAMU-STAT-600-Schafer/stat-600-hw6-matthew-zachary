@@ -16,7 +16,15 @@ Rcpp::sourceCpp("src/LRMultiClass.cpp")
 #'
 #' @examples
 #' # Give example
-#' 
+#' set.seed(123)
+#' n_train <- 100   
+#' n_test <- 100     
+#' p <- 3           
+#' K <- 4           
+#' X_train <- matrix(rnorm(n_train * p), nrow = n_train, ncol = p)
+#' y_train <- sample(1:K, n_train, replace = TRUE)
+#' X_train <- cbind(1, X_train)
+#' new <- LRMultiClass(X_train, y_train)
 
 LRMultiClass <- function(X, y, numIter = 50, eta = 0.1, lambda = 1, beta_init = NULL){
   

@@ -34,8 +34,6 @@ double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& 
   int k = beta.n_rows;
   double first_term = 0.0;
   
-  arma::cout << "getting here" << arma::endl;
-  
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < k; j++) {
       if (Y(i) == j) {
