@@ -22,7 +22,6 @@ arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
   for(int i=0; i<n; i++){
     //check this, it's saying that sum isn't in namespace? but seems like its in the docs
     probabilities.row(i) = exp_scores.row(i) / arma::accu(exp_scores.row(i));
-    
   }
 
   return probabilities;
@@ -30,15 +29,17 @@ arma::mat class_probabilities(const arma::mat& X, const arma::mat&beta){
 }
 //Implementing a Helper function that computes the objective value 
 // [[Rcpp::export]]
-double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, const arma::mat& class_probabilities) {
+double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, const arma::mat& prods) {
   int n = X.n_rows;
   int k = beta.n_rows;
   double first_term = 0.0;
   
+  arma::cout << "getting here" << arma::endl;
+  
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < k; j++) {
       if (Y(i) == j) {
-        first_term += log(class_probabilities(i, j));
+        first_term += log(prods(i, j));
       }
     }
   }

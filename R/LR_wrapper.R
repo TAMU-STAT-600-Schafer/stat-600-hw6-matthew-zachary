@@ -16,6 +16,8 @@ Rcpp::sourceCpp("src/LRMultiClass.cpp")
 #'
 #' @examples
 #' # Give example
+#' 
+
 LRMultiClass <- function(X, y, numIter = 50, eta = 0.1, lambda = 1, beta_init = NULL){
   
   # Compatibility checks from HW3 and initialization of beta_init
