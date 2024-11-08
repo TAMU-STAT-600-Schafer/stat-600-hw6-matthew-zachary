@@ -7,24 +7,34 @@
 LRMultiClass(X, y, numIter = 50, eta = 0.1, lambda = 1, beta_init = NULL)
 }
 \arguments{
-\item{X}{}
+\item{X}{n x p training data, 1st column should be 1s to account for intercept}
 
-\item{y}{}
+\item{y}{a vector of size n of class labels, from 0 to K-1}
 
-\item{numIter}{}
+\item{numIter}{number of FIXED iterations of the algorithm, default value is 50}
 
-\item{eta}{}
+\item{eta}{learning rate, default value is 0.1}
 
-\item{lambda}{}
+\item{lambda}{ridge parameter, default value is 1}
 
-\item{beta_init}{}
+\item{beta_init}{(optional) initial starting values of beta for the algorithm, should be p x K matrix}
 }
 \value{
-
+beta - p x K matrix of estimated beta values after numIter iterations
+objective - (numIter + 1) length vector of objective values of the function that we are minimizing at each iteration (+ starting value)
 }
 \description{
 Title
 }
 \examples{
 # Give example
+set.seed(123)
+n_train <- 100   
+n_test <- 100     
+p <- 3           
+K <- 4           
+X_train <- matrix(rnorm(n_train * p), nrow = n_train, ncol = p)
+y_train <- sample(1:K, n_train, replace = TRUE)
+X_train <- cbind(1, X_train)
+new <- LRMultiClass(X_train, y_train)
 }

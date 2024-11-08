@@ -14,8 +14,9 @@ arma::mat square_mat(const arma::mat& X, int& K){
   arma::vec squared;
   arma::mat X_squared(X.n_rows, X.n_cols);
   arma::mat returner(X.n_rows, K);
+  int p = X.n_cols;
   
-  for(int i = 0; i < X.n_cols; ++i){
+  for(int i = 0; i < p; ++i){
     X_squared.col(i) = arma::square(X.col(i));
   }
   
@@ -34,11 +35,13 @@ arma::mat euc_function_c(const arma::mat& X, const arma::mat& X_squared, const a
   arma::mat temp(mu.n_rows, 1);
   arma::mat temp_squared(X.n_rows, mu.n_rows);
   arma::mat returner(X.n_rows, mu.n_rows);
+  int mu_n = mu.n_rows;
+  int n = X.n_rows;
   
   temp = sum(arma::square(mu),1);
   
-  for(int i = 0; i < mu.n_rows; ++i){
-    for(int j = 0; j < X.n_rows; ++j){
+  for(int i = 0; i < mu_n; ++i){
+    for(int j = 0; j < n; ++j){
       temp_squared.col(i).row(j) = temp(i);
     }
   }
@@ -74,7 +77,7 @@ arma::uvec MyKmeans_c(const arma::mat& X, int K,
   for(int i = 0; i < numIter; ++i){
     distances = euc_function_c(X, X_squared, mu_1);
     
-    for (int i = 0; i < distances.n_rows; ++i) {
+    for (int i = 0; i < n; ++i) {
       Y(i) = distances.row(i).index_min(); 
     }
     

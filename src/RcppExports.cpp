@@ -6,6 +6,65 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
+// class_probabilities
+arma::mat class_probabilities(const arma::mat& X, const arma::mat& beta);
+RcppExport SEXP _GroupHW_class_probabilities(SEXP XSEXP, SEXP betaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    rcpp_result_gen = Rcpp::wrap(class_probabilities(X, beta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// objective_fx
+double objective_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, const arma::mat& prods);
+RcppExport SEXP _GroupHW_objective_fx(SEXP XSEXP, SEXP YSEXP, SEXP betaSEXP, SEXP lambdaSEXP, SEXP prodsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type prods(prodsSEXP);
+    rcpp_result_gen = Rcpp::wrap(objective_fx(X, Y, beta, lambda, prods));
+    return rcpp_result_gen;
+END_RCPP
+}
+// compute_W_k
+arma::mat compute_W_k(const arma::mat& P_k);
+RcppExport SEXP _GroupHW_compute_W_k(SEXP P_kSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type P_k(P_kSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_W_k(P_k));
+    return rcpp_result_gen;
+END_RCPP
+}
+// update_fx
+arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, double eta, const arma::mat& probabilities);
+RcppExport SEXP _GroupHW_update_fx(SEXP XSEXP, SEXP YSEXP, SEXP betaSEXP, SEXP lambdaSEXP, SEXP etaSEXP, SEXP probabilitiesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::colvec& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< double >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type probabilities(probabilitiesSEXP);
+    rcpp_result_gen = Rcpp::wrap(update_fx(X, Y, beta, lambda, eta, probabilities));
+    return rcpp_result_gen;
+END_RCPP
+}
 // LRMultiClass_c
 Rcpp::List LRMultiClass_c(const arma::mat& X, const arma::uvec& y, const arma::mat& beta_init, int numIter, double eta, double lambda);
 RcppExport SEXP _GroupHW_LRMultiClass_c(SEXP XSEXP, SEXP ySEXP, SEXP beta_initSEXP, SEXP numIterSEXP, SEXP etaSEXP, SEXP lambdaSEXP) {
@@ -19,6 +78,31 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type eta(etaSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     rcpp_result_gen = Rcpp::wrap(LRMultiClass_c(X, y, beta_init, numIter, eta, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
+// square_mat
+arma::mat square_mat(const arma::mat& X, int& K);
+RcppExport SEXP _GroupHW_square_mat(SEXP XSEXP, SEXP KSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< int& >::type K(KSEXP);
+    rcpp_result_gen = Rcpp::wrap(square_mat(X, K));
+    return rcpp_result_gen;
+END_RCPP
+}
+// euc_function_c
+arma::mat euc_function_c(const arma::mat& X, const arma::mat& X_squared, const arma::mat& mu);
+RcppExport SEXP _GroupHW_euc_function_c(SEXP XSEXP, SEXP X_squaredSEXP, SEXP muSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X_squared(X_squaredSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mu(muSEXP);
+    rcpp_result_gen = Rcpp::wrap(euc_function_c(X, X_squared, mu));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -38,7 +122,13 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_GroupHW_class_probabilities", (DL_FUNC) &_GroupHW_class_probabilities, 2},
+    {"_GroupHW_objective_fx", (DL_FUNC) &_GroupHW_objective_fx, 5},
+    {"_GroupHW_compute_W_k", (DL_FUNC) &_GroupHW_compute_W_k, 1},
+    {"_GroupHW_update_fx", (DL_FUNC) &_GroupHW_update_fx, 6},
     {"_GroupHW_LRMultiClass_c", (DL_FUNC) &_GroupHW_LRMultiClass_c, 6},
+    {"_GroupHW_square_mat", (DL_FUNC) &_GroupHW_square_mat, 2},
+    {"_GroupHW_euc_function_c", (DL_FUNC) &_GroupHW_euc_function_c, 3},
     {"_GroupHW_MyKmeans_c", (DL_FUNC) &_GroupHW_MyKmeans_c, 4},
     {NULL, NULL, 0}
 };

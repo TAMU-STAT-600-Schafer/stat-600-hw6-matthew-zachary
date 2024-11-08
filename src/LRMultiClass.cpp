@@ -70,6 +70,7 @@ arma::colvec update_B_k(const arma::mat& X, const arma::mat& P_k, const arma::co
   return updated_beta_k;
 }
 
+//[[Rcpp::export]]
 arma::mat update_fx(const arma::mat& X, const arma::colvec& Y, const arma::mat& beta, double lambda, double eta, const arma::mat& probabilities) {
   int K = beta.n_cols;
   arma::mat updated_beta = beta;
