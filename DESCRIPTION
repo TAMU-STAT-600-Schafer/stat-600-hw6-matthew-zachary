@@ -6,7 +6,7 @@ Date: 2024-11-5
 Author: Matthew Blackley, Zachary Mackin
 Maintainer: Who to complain to <zachmackin@tamu.edu>
 Description: This package implements K-Means and Multi-Class Logistic Regression in CPP for a speed up compared to previously implemented R functions. 
-License: What license is it under?
+License: GPL (>= 3)
 Imports: Rcpp (>= 1.0.5)
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.3.2
